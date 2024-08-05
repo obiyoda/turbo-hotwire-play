@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>People Comparison Dashboard</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@7.3.0/dist/turbo.es2017-umd.js"></script>
+  </head>
+  <body class="bg-gray-100">
+    <div id="app" class="container mx-auto p-4">
+      <h1 class="text-3xl font-bold mb-4">People Comparison Dashboard</h1>
+
+      <div class="flex space-x-4 mb-4">
+        <% people.forEach(person => { %>
+        <a
+          href="/compare/<%= person.id %>/<%= person1 ? person1.id : '' %>"
+          class="bg-blue-500 text-white px-3 py-1 rounded"
+          data-turbo-frame="left-person"
+        >
+          <%= person.name %> (Left)
+        </a>
+        <% }); %>
+      </div>
+
+      <div class="flex space-x-4 mb-4">
+        <% people.forEach(person => { %>
+        <a
+          href="/compare/<%= person2 ? person2.id : '' %>/<%= person.id %>"
+          class="bg-green-500 text-white px-3 py-1 rounded"
+          data-turbo-frame="right-person"
+        >
+          <%= person.name %> (Right)
+        </a>
+        <% }); %>
+      </div>
+
+      <div class="flex space-x-4">
+        <div>
+          <turbo-frame
+            id="left-person"
+            class="w-1/2"
+            data-turbo-action="advance"
+          >
+            <% if (person1) { %> <%- include('person', { person: person1 }) %>
+            <% } else { %>
+            <p>Select a person for the left side.</p>
+            <% } %>
+          </turbo-frame>
+          <turbo-frame
+            id="zodiac-<%= person1.id %>"
+            data-turbo-action="advance"
+          >
+            <a
+              href="/zodiac/<%= person1.id %>"
+              class="mt-4 bg-purple-500 text-white px-3 py-1 rounded"
+              data-action="load-zodiac"
+              data-person-id="<%= person1.id %>"
+            >
+              Get Zodiac Sign
+            </a>
+          </turbo-frame>
+        </div>
+        <div>
+          <turbo-frame
+            id="right-person"
+            class="w-1/2"
+            data-turbo-action="advance"
+          >
+            <% if (person2) { %> <%- include('person', { person: person2 }) %>
+            <% } else { %>
+            <p>Select a person for the right side.</p>
+            <% } %>
+          </turbo-frame>
+          <turbo-frame
+            id="zodiac-<%= person2.id %>"
+            data-turbo-action="advance"
+          >
+            <a
+              href="/zodiac/<%= person2.id %>"
+              class="mt-4 bg-purple-500 text-white px-3 py-1 rounded"
+              data-action="load-zodiac"
+              data-person-id="<%= person2.id %>"
+            >
+              Get Zodiac Sign
+            </a>
+          </turbo-frame>
+        </div>
+      </div>
+    </div>
+    <script src="/app.js"></script>
+  </body>
+</html>
